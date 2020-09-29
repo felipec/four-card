@@ -1,0 +1,127 @@
+<!doctype html>
+
+<html lang="en">
+
+  <head>
+    <meta charset="utf-8">
+    <title>Four-card problem</title>
+    <style>
+      body {
+        font-family: sans-serif;
+        background-color: hsl(240, 25%, 75%);
+        height: 100vh;
+        margin: 0;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        gap: 20px;
+      }
+      p {
+        margin-left: 20px;
+        font-size: 2em;
+      }
+      button {
+        padding: 0.5em;
+        font-size: 2em;
+      }
+
+      #deck {
+        display: grid;
+        grid-template-columns: 1fr 1fr 1fr 1fr;
+        grid-gap: 20px;
+        justify-items: center;
+        justify-content: space-evenly;
+        align-content: center;
+        height: 100%;
+      }
+      #deck div {
+        width: 200px;
+        height: 280px;
+        border-radius: 25px;
+        border: 8px solid hsl(0, 0%, 0%, 80%);
+        text-align: center;
+        font-size: 10em;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        user-select: none;
+        cursor: pointer;
+        filter: opacity(75%);
+      }
+      .white {
+        background-color: hsl(0, 0%, 95%);
+      }
+      .red {
+        background-color: hsl(0, 60%, 50%);
+      }
+      .brown {
+        background-color: hsl(30, 60%, 50%);
+      }
+      #deck .selected {
+        border: 8px solid hsl(240, 75%, 75%);
+        filter: none;
+      }
+
+      #overlay {
+        position: fixed;
+        display: none;
+        width: 100%;
+        height: 100%;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        z-index: 2;
+        cursor: pointer;
+      }
+
+      #result {
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        font-size: 50px;
+        color: white;
+        transform: translate(-50%,-50%);
+      }
+
+    </style>
+  </head>
+
+  <body>
+    <p>If a card shows an even number on one face, then its opposite face is red.</p>
+    <p>Which card(s) must you turn over to test the truth of this proposition?</p>
+    <div id="deck">
+      <div class="white" onclick="turn(this)">3</div>
+      <div class="white" onclick="turn(this)">8</div>
+      <div class="red" onclick="turn(this)"></div>
+      <div class="brown" onclick="turn(this)"></div>
+    </div>
+    <button onclick="test()">Done</button>
+    <div id="overlay" onclick="again()">
+      <div id="result"></div>
+    </div>
+  </body>
+
+  <script>
+    function turn(e) {
+      e.classList.toggle("selected");
+    }
+
+    function test() {
+      let v = Array.from(deck.children).reduce((a, e) => (a << 1 | e.classList.contains('selected')), 0);
+      if (v == 0b0101) {
+        result.textContent = 'Correct';
+        overlay.style.backgroundColor = 'hsl(120, 50%, 25%, 50%)';
+      } else {
+        result.textContent = 'Wrong';
+        overlay.style.backgroundColor = 'hsl(0, 50%, 25%, 50%)';
+      }
+      overlay.style.display = "block";
+    }
+
+    function again() {
+      overlay.style.display = "none";
+    }
+  </script>
+
+</html>
